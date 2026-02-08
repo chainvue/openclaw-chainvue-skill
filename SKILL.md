@@ -4,7 +4,7 @@ A skill for OpenClaw that provides access to the Verus blockchain via the ChainV
 
 ## Description
 
-ChainVue gives you real-time access to the Verus blockchain. Query balances, track transactions, monitor identities, and explore currencies - all through natural conversation.
+ChainVue gives you real-time access to the Verus blockchain. Query balances, track transactions, monitor identities, explore currencies, and send transactions - all through natural conversation.
 
 ## Capabilities
 
@@ -15,9 +15,11 @@ ChainVue gives you real-time access to the Verus blockchain. Query balances, tra
 - **Block Explorer**: Query blocks, transactions, and chain statistics
 - **Whale Alerts**: Find large UTXO movements
 - **Rich Lists**: See top holders for any currency
+- **Wallet Management**: Create wallets, import keys, send transactions
 
 ## Example Prompts
 
+### Reading Blockchain Data
 - "What's the VRSC balance for RAddress...?"
 - "Show me the transaction history for my address"
 - "Look up the identity mike@"
@@ -26,9 +28,18 @@ ChainVue gives you real-time access to the Verus blockchain. Query balances, tra
 - "What was the block reward for block 1000000?"
 - "How many blocks are synced on mainnet?"
 
+### Wallet & Transactions
+- "Create a new wallet called 'savings'"
+- "What wallets do I have?"
+- "What's the address of my main wallet?"
+- "Send 10 VRSC from my main wallet to RYzxxx..."
+- "Import this private key as 'trading'"
+
 ## Configuration
 
-This skill connects to the ChainVue MCP Gateway. By default it uses the public endpoint.
+This skill connects to:
+1. **ChainVue MCP Gateway** (remote) - blockchain data and transaction broadcasting
+2. **ChainVue Signer** (local) - secure key storage and transaction signing
 
 ### Environment Variables (Optional)
 
@@ -43,7 +54,7 @@ CHAINVUE_MCP_URL=https://mcp.chainvue.io/sse  # Default public endpoint
 | Verus Mainnet | `i5w5MuNik5NtLcYmNzcvaoixooEebB6MGV` |
 | Verus Testnet | `iJhCezBExJHvtyH3fGhNnt2NhU4Ztkf2yq` |
 
-## Available Tools (45)
+## Available Tools (52)
 
 ### Network & Blocks
 - `get_networks` - List all active Verus networks
@@ -80,12 +91,37 @@ CHAINVUE_MCP_URL=https://mcp.chainvue.io/sse  # Default public endpoint
 ### Transactions
 - `get_transaction` - Transaction by txid
 - `get_transaction_details` - Full tx with inputs/outputs/fee
+- `build_unsigned_tx` - Build transaction for signing
 - `send_raw_transaction` - Broadcast signed transaction
 - `decode_raw_transaction` - Decode raw tx hex
+
+### Wallet (Local Signer)
+- `list_wallets` - List all stored wallets
+- `create_wallet` - Create new wallet with generated key
+- `import_key` - Import existing private key (WIF format)
+- `get_address` - Get wallet address
+- `sign_transaction` - Sign a transaction locally
+- `delete_wallet` - Remove a wallet from storage
+
+## Security
+
+**Your private keys never leave your machine.**
+
+The skill uses two MCP servers:
+- **ChainVue API** (remote): Handles blockchain queries and broadcasting
+- **ChainVue Signer** (local): Stores keys in OS keychain, signs locally
+
+```
+Transaction Flow:
+1. Agent calls ChainVue API to build unsigned tx
+2. Agent calls local Signer to sign (key never sent)
+3. Agent calls ChainVue API to broadcast signed tx
+```
 
 ## Links
 
 - [ChainVue](https://chainvue.io) - Blockchain Explorer
+- [ChainVue Signer](https://github.com/chainvue/chainvue-signer) - Local Signing
 - [Verus](https://verus.io) - Verus Blockchain
 - [API Docs](https://chainvue.io/docs) - GraphQL API Documentation
 
