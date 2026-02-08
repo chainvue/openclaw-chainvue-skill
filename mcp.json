@@ -13,7 +13,7 @@
     },
     "signer": {
       "command": "npx",
-      "args": ["@chainvue/signer"],
+      "args": ["--yes", "github:chainvue/chainvue-signer"],
       "env": {
         "NODE_NO_WARNINGS": "1"
       }
