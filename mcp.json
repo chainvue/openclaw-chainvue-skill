@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "chainvue": {
+      "command": "npx",
+      "args": [
+        "mcp-remote",
+        "${CHAINVUE_MCP_URL:-https://mcp.chainvue.io/sse}",
+        "--allow-http"
+      ],
+      "env": {
+        "NODE_NO_WARNINGS": "1"
+      }
+    }
+  }
+}
